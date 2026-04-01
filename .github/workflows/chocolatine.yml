@@ -49,7 +49,7 @@ jobs:
 
       - name: Fail if there are coding style errors
         run: |
-          if [ -f coding-style-reports.log ] && [ -s coding-style-reports.log ]; then
+          if [ -s coding-style-reports.log ]; then
             exit 1
           fi
 
