@@ -9,7 +9,7 @@ on:
       - 'no-ga/**'
 
 env:
-  MIRROR_SSH_URL: git@github.com:aurelien-schir/repo-for-chocolatine.git
+  MIRROR_SSH_URL: git@github.com:EpitechPGE1-2025/G-DOP-200-LYN-2-1-chocolatine-4.git
   EXECUTABLES: "test-choco"
 
 jobs:
