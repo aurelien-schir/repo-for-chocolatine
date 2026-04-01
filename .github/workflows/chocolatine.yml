@@ -57,6 +57,7 @@ jobs:
         run: make clean
 
       - name: Verify executables exist and are executable
+        shell: bash
         run: |
           IFS=',' read -ra EXEC_LIST <<< "$EXECUTABLES"
           FAILED=0
