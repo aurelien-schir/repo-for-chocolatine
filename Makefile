@@ -26,4 +26,7 @@ fclean: clean
 
 re: fclean all
 
+tests_run:
+	echo "No tests yet"
+
 .PHONY: all clean fclean re
