@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2025
-** minishell
+** test-choco
 ** File description:
-** entry point
+** main.c
 */
 
 #include "my.h"
