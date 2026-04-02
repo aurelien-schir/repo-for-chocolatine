@@ -45,9 +45,9 @@ jobs:
               file=$(echo "$line" | cut -d':' -f1)
               lineno=$(echo "$line" | cut -d':' -f2)
               severity=$(echo "$line" | grep -oP '\[Banana\] \[\K[^\]]+')
-              code=$(echo "$line" | grep -oP '\(C-[^)]+\)')
-              message=$(echo "$line" | grep -oP '\] \K[^(]+' | tail -1 | xargs)
-              echo "::error file=${file},line=${lineno}::${severity} coding style error: ${file}#L${lineno}"$'\n'"${code} - ${message}"
+              code=$(echo "$line" | grep -oP 'C-[A-Z0-9]+')
+              message=$(echo "$line" | grep -oP '\(C-[^)]+\) \K.*' | xargs)
+              echo "::error file=${file},line=${lineno}::${severity} coding style error: ${file}#L${lineno}%0A${code} - ${message}"
               ERRORS=1
             fi
           done < /tmp/build_output.txt
