@@ -38,15 +38,19 @@ jobs:
       - name: Display coding style errors as annotations
         shell: bash
         run: |
+          echo "=== BUILD OUTPUT ==="
+          cat /tmp/build_output.txt
+          echo "=== END OUTPUT ==="
           ERRORS=0
           while IFS= read -r line; do
-            # Format: fichier.c:19:2: warning: [Banana] [Severity] message (C-XX)
             if echo "$line" | grep -q '\[Banana\]'; then
+              echo "FOUND BANANA LINE: $line"
               file=$(echo "$line" | cut -d':' -f1)
               lineno=$(echo "$line" | cut -d':' -f2)
               severity=$(echo "$line" | grep -oP '\[Banana\] \[\K[^\]]+')
               code=$(echo "$line" | grep -oP 'C-[A-Z0-9]+')
               message=$(echo "$line" | grep -oP '\(C-[^)]+\) \K.*' | xargs)
+              echo "file=$file lineno=$lineno severity=$severity code=$code message=$message"
               echo "::error file=${file},line=${lineno}::${severity} coding style error: ${file}#L${lineno}%0A${code} - ${message}"
               ERRORS=1
             fi
