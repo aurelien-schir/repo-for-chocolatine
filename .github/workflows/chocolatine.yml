@@ -11,7 +11,6 @@ on:
 env:
   MIRROR_SSH_URL: git@github.com:aurelien-schir/repo-for-chocolatine.git
   EXECUTABLES: "test-choco"
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   check_compilation_and_coding_style:
