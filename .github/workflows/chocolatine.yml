@@ -46,7 +46,7 @@ jobs:
               severity=$(echo "$line" | sed 's/.*\[Banana\] \[\([^]]*\)\].*/\1/')
               code=$(echo "$line" | sed 's/.*(\ *\(C-[A-Z0-9]*\)\ *).*/\1/')
               message=$(echo "$line" | sed 's/.*\[Banana\] \[[^]]*\] \(.*\) (C-[A-Z0-9]*)/\1/')
-              echo "::error file=${file},line=${lineno}::${severity} coding style error: ${file}#L${lineno}%0A${code} - ${message}"
+              echo "::error file=${file},line=${lineno},title=${severity} coding style error: ${file}#L${lineno}::${code} - ${message}"
               ERRORS=1
             fi
           done < /tmp/build_output.txt
