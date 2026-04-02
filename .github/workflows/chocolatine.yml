@@ -9,7 +9,7 @@ on:
       - 'no-ga/**'
 
 env:
-  MIRROR_SSH_URL: git@github.com:EpitechPGE1-2025/G-DOP-200-LYN-2-1-chocolatine-4.git
+  MIRROR_SSH_URL: git@github.com:aurelien-schir/repo-for-chocolatine.git
   EXECUTABLES: "test-choco"
 
 jobs:
@@ -28,28 +28,30 @@ jobs:
       - name: Check repository with banana
         run: banana-check-repo
 
-      - name: Compile project
+      - name: Compile project and capture output
         timeout-minutes: 2
-        run: make
-        env:
-          CC: epiclang
+        shell: bash
+        run: |
+          make CC=epiclang 2>&1 | tee /tmp/build_output.txt
+          exit ${PIPESTATUS[0]}
 
       - name: Display coding style errors as annotations
+        shell: bash
         run: |
-          if [ -f coding-style-reports.log ]; then
-            while IFS= read -r line; do
-              file=$(echo "$line" | cut -d':' -f1 | sed 's|^\./||')
+          ERRORS=0
+          while IFS= read -r line; do
+            # Format: fichier.c:19:2: warning: [Banana] [Severity] message (C-XX)
+            if echo "$line" | grep -q '\[Banana\]'; then
+              file=$(echo "$line" | cut -d':' -f1)
               lineno=$(echo "$line" | cut -d':' -f2)
-              severity=$(echo "$line" | cut -d':' -f3 | xargs)
-              code=$(echo "$line" | cut -d':' -f4 | xargs)
-              message=$(echo "$line" | cut -d':' -f5- | xargs)
+              severity=$(echo "$line" | grep -oP '\[Banana\] \[\K[^\]]+')
+              code=$(echo "$line" | grep -oP '\(C-[^)]+\)')
+              message=$(echo "$line" | grep -oP '\] \K[^(]+' | tail -1 | xargs)
               echo "::error file=${file},line=${lineno}::${severity} coding style error: ${file}#L${lineno}"$'\n'"${code} - ${message}"
-            done < coding-style-reports.log
-          fi
-
-      - name: Fail if there are coding style errors
-        run: |
-          if [ -s coding-style-reports.log ]; then
+              ERRORS=1
+            fi
+          done < /tmp/build_output.txt
+          if [ $ERRORS -ne 0 ]; then
             exit 1
           fi
 
@@ -96,6 +98,7 @@ jobs:
     name: Push to Mirror Repository
     runs-on: ubuntu-latest
     needs: run_tests
+    if: ${{ github.event_name == 'push' && (github.repository != vars.MIRROR_REPO || vars.MIRROR_REPO == '') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
