@@ -14,6 +14,6 @@ int main(int argc, char **argv)
         write(1, "Vive la piscine !\n", my_strlen("Vive la piscine !\n"));
         return 0;
     }
-    write(1, "Vive Epitech !\n", my_strlen("Vive Epitech !\n"));
+    write(1, "vive Epitech !\n", my_strlen("vive Epitech !\n"));
     return 0;
 }
